@@ -26,9 +26,7 @@ typedef struct {
     int flightId;
     int checkedIn;
     int ticketBooked;
-
     char ticketClass[20];
-
 } Passenger;
 
 Flight flights[MAX_FLIGHTS];
@@ -45,9 +43,9 @@ int admin_login()
 {
     char user[20], pass[20];
     printf("Username: ");
-    scanf("%s", user);
+    scanf("%19s", user);
     printf("Password: ");
-    scanf("%s", pass);
+    scanf("%19s", pass);
 
     if (strcmp(user, "admin") == 0 && strcmp(pass, "admin123") == 0)
     {
@@ -69,11 +67,11 @@ void add_flight()
     Flight f;
     f.flightId = flightCount + 1;
     printf("Enter Flight Name: ");
-    scanf("%s", f.name);
+    scanf("%49s", f.name);
     printf("Enter Source: ");
-    scanf("%s", f.source);
+    scanf("%29s", f.source);
     printf("Enter Destination: ");
-    scanf("%s", f.destination);
+    scanf("%29s", f.destination);
     printf("Enter Fare: ");
     scanf("%f", &f.fare);
     printf("Enter Total Seats: ");
@@ -111,9 +109,9 @@ void search_flight()
     char src[30], dest[30];
     int i, found = 0;
     printf("Enter Source: ");
-    scanf("%s", src);
+    scanf("%29s", src);
     printf("Enter Destination: ");
-    scanf("%s", dest);
+    scanf("%29s", dest);
 
     for (i = 0; i < flightCount; i++)
     {
@@ -143,9 +141,9 @@ void update_flight()
             printf("Enter New Fare: ");
             scanf("%f", &flights[i].fare);
             printf("Enter New Source: ");
-            scanf("%s", flights[i].source);
+            scanf("%29s", flights[i].source);
             printf("Enter New Destination: ");
-            scanf("%s", flights[i].destination);
+            scanf("%29s", flights[i].destination);
             printf("Flight updated successfully.\n");
             break;
         }
@@ -242,16 +240,16 @@ void register_passenger()
     Passenger p;
     p.passengerId = passengerCount + 1;
     printf("Enter Name: ");
-    scanf("%s", p.name);
+    scanf("%49s", p.name);
     printf("Enter Age: ");
     scanf("%d", &p.age);
     printf("Enter Contact: ");
-    scanf("%s", p.contact);
+    scanf("%14s", p.contact);
     p.flightId = 0;
     p.checkedIn = 0;
     p.ticketBooked = 0;
 
-    strcpy(p.ticketClass,"NotBooked");
+    strcpy(p.ticketClass, "NotBooked");
 
     passengers[passengerCount++] = p;
     printf("Passenger registered successfully. Passenger ID: %d\n", p.passengerId);
@@ -297,11 +295,11 @@ void update_passenger()
         {
             found = 1;
             printf("Enter New Name: ");
-            scanf("%s", passengers[i].name);
+            scanf("%49s", passengers[i].name);
             printf("Enter New Age: ");
             scanf("%d", &passengers[i].age);
             printf("Enter New Contact: ");
-            scanf("%s", passengers[i].contact);
+            scanf("%14s", passengers[i].contact);
             printf("Passenger updated successfully.\n");
             break;
         }
@@ -361,16 +359,16 @@ void book_ticket()
                     printf("\n1. Economy");
                     printf("\n2. Business");
                     printf("\nChoice : ");
-                    scanf("%d",&classChoice);
+                    scanf("%d", &classChoice);
 
                     float fare = flights[j].fare;
-                    if(classChoice == 1)
+                    if (classChoice == 1)
                     {
-                        strcpy(passengers[i].ticketClass,"Economy");
+                        strcpy(passengers[i].ticketClass, "Economy");
                     }
-                    else if(classChoice == 2)
+                    else if (classChoice == 2)
                     {
-                        strcpy(passengers[i].ticketClass,"Business");
+                        strcpy(passengers[i].ticketClass, "Business");
                         fare = flights[j].fare * 2;
                     }
                     else
@@ -388,8 +386,6 @@ void book_ticket()
                     printf("Class : %s\n", passengers[i].ticketClass);
                     printf("Fare : %.2f\n", fare);
                     return;
-
-
                 }
             }
         }
@@ -494,7 +490,7 @@ void boarding_pass()
                     printf("Source    : %s\n", flights[j].source);
                     printf("Destination: %s\n", flights[j].destination);
                     printf("Fare      : %.2f\n", flights[j].fare);
-                    printf("Class     : %s\n",passengers[i].ticketClass);
+                    printf("Class     : %s\n", passengers[i].ticketClass);
                     printf("==========================\n");
                     break;
                 }
@@ -506,12 +502,12 @@ void boarding_pass()
         printf("Passenger ID not found.\n");
 }
 
-/* ---------------- MODULE 16: Revenue Report ---------------- */
+/* ---------------- MODULE 17: Revenue Report ---------------- */
 void revenue_report()
 {
     int i;
 
-    if(flightCount == 0)
+    if (flightCount == 0)
     {
         printf("\nNo Flights Available.\n");
         return;
@@ -523,34 +519,23 @@ void revenue_report()
 
     printf("\nTotal Flights    : %d", flightCount);
     printf("\nTotal Passengers : %d", passengerCount);
-    printf("\nTotal Revenue    : Rs. %.2f\n",
-           totalRevenue);
+    printf("\nTotal Revenue    : Rs. %.2f\n", totalRevenue);
 
     printf("\n-------- Flight Wise Details --------\n");
 
-    for(i = 0; i < flightCount; i++)
+    for (i = 0; i < flightCount; i++)
     {
-        printf("\nFlight ID       : %d",
-               flights[i].flightId);
-
-        printf("\nFlight Name     : %s",
-               flights[i].name);
-
-        printf("\nBooked Seats    : %d",
-               flights[i].bookedSeats);
-
-        printf("\nAvailable Seats : %d",
-               flights[i].totalSeats -
-               flights[i].bookedSeats);
-
-        printf("\nBase Fare       : Rs. %.2f\n",
-               flights[i].fare);
+        printf("\nFlight ID       : %d", flights[i].flightId);
+        printf("\nFlight Name     : %s", flights[i].name);
+        printf("\nBooked Seats    : %d", flights[i].bookedSeats);
+        printf("\nAvailable Seats : %d", flights[i].totalSeats - flights[i].bookedSeats);
+        printf("\nBase Fare       : Rs. %.2f\n", flights[i].fare);
     }
 
     printf("\n==================================\n");
 }
-/* ---------------- MODULE 18: Payment Processing ---------------- */
 
+/* ---------------- MODULE 18: Payment Processing ---------------- */
 void payment_processing()
 {
     int option;
@@ -559,7 +544,7 @@ void payment_processing()
     printf("\n===== PAYMENT PROCESSING =====\n");
 
     printf("Enter Amount : ");
-    scanf("%f",&amount);
+    scanf("%f", &amount);
 
     printf("\n1. UPI");
     printf("\n2. Debit Card");
@@ -567,26 +552,22 @@ void payment_processing()
     printf("\n4. Net Banking");
 
     printf("\nChoose Payment Method : ");
-    scanf("%d",&option);
+    scanf("%d", &option);
 
-    switch(option)
+    switch (option)
     {
         case 1:
             printf("\nUPI Payment Successful\n");
             break;
-
         case 2:
             printf("\nDebit Card Payment Successful\n");
             break;
-
         case 3:
             printf("\nCredit Card Payment Successful\n");
             break;
-
         case 4:
             printf("\nNet Banking Payment Successful\n");
             break;
-
         default:
             printf("\nInvalid Payment Method\n");
             return;
@@ -595,81 +576,69 @@ void payment_processing()
     printf("Amount Paid : %.2f\n", amount);
 }
 
-/* ---------------- MODULE 18: Save Data ---------------- */
+/* ---------------- MODULE 19: Save Data ---------------- */
 void save_data()
 {
     FILE *fp = fopen(FLIGHT_FILE, "wb");
     if (fp)
     {
         fwrite(&flightCount, sizeof(int), 1, fp);
-
         fwrite(flights, sizeof(Flight), (size_t)flightCount, fp);
         fclose(fp);
     }
     fp = fopen(PASSENGER_FILE, "wb");
     if (fp)
     {
-
         fwrite(&passengerCount, sizeof(int), 1, fp);
         fwrite(passengers, sizeof(Passenger), (size_t)passengerCount, fp);
-
         fclose(fp);
     }
     printf("Data saved successfully.\n");
 }
 
-/* ---------------- MODULE 19: Load Data ---------------- */
+/* ---------------- MODULE 20: Load Data ---------------- */
 void load_data()
 {
     FILE *fp;
 
     fp = fopen(FLIGHT_FILE, "rb");
-
-    if(fp)
+    if (fp)
     {
-        fread(&flightCount,sizeof(int),1,fp);
-
-        if(flightCount < 0 || flightCount > MAX_FLIGHTS)
+        fread(&flightCount, sizeof(int), 1, fp);
+        if (flightCount < 0 || flightCount > MAX_FLIGHTS)
         {
             flightCount = 0;
         }
-
         fread(flights, sizeof(Flight), (size_t)flightCount, fp);
-
         fclose(fp);
     }
 
-    fp = fopen(PASSENGER_FILE,"rb");
-
-    if(fp)
+    fp = fopen(PASSENGER_FILE, "rb");
+    if (fp)
     {
-        fread(&passengerCount,sizeof(int),1,fp);
-
-        if(passengerCount < 0 || passengerCount > MAX_PASSENGERS)
+        fread(&passengerCount, sizeof(int), 1, fp);
+        if (passengerCount < 0 || passengerCount > MAX_PASSENGERS)
         {
             passengerCount = 0;
         }
-
         fread(passengers, sizeof(Passenger), (size_t)passengerCount, fp);
-
         fclose(fp);
     }
 }
 
-/* ---------------- MODULE 20: Main Menu ---------------- */
+/* ---------------- MODULE: Main Menu ---------------- */
 int main()
 {
     int choice;
 
     load_data();
 
-    /* TEMPORARY FIX */
-    if(flightCount < 0 || flightCount > MAX_FLIGHTS)
+    if (flightCount < 0 || flightCount > MAX_FLIGHTS)
     {
         flightCount = 0;
     }
 
-    if(passengerCount < 0 || passengerCount > MAX_PASSENGERS)
+    if (passengerCount < 0 || passengerCount > MAX_PASSENGERS)
     {
         passengerCount = 0;
     }
@@ -702,93 +671,34 @@ int main()
         printf("0. Exit\n");
 
         printf("Enter Choice : ");
-        scanf("%d",&choice);
+        scanf("%d", &choice);
 
-        switch(choice)
+        switch (choice)
         {
-            case 1:
-                add_flight();
-                break;
-
-            case 2:
-                view_flights();
-                break;
-
-            case 3:
-                search_flight();
-                break;
-
-            case 4:
-                update_flight();
-                break;
-
-            case 5:
-                delete_flight();
-                break;
-
-            case 6:
-                flight_status();
-                break;
-
-            case 7:
-                seat_availability();
-                break;
-
-            case 8:
-                register_passenger();
-                break;
-
-            case 9:
-                view_passengers();
-                break;
-
-            case 10:
-                update_passenger();
-                break;
-
-            case 11:
-                search_passenger();
-                break;
-
-            case 12:
-                book_ticket();
-                break;
-
-            case 13:
-                cancel_ticket();
-                break;
-
-            case 14:
-                passenger_checkin();
-                break;
-
-            case 15:
-                boarding_pass();
-                break;
-
-            case 16:
-                revenue_report();
-                break;
-
-            case 17:
-                payment_processing();
-                break;
-
-            case 18:
-                save_data();
-                printf("Data Saved Successfully\n");
-                break;
-
+            case 1: add_flight(); break;
+            case 2: view_flights(); break;
+            case 3: search_flight(); break;
+            case 4: update_flight(); break;
+            case 5: delete_flight(); break;
+            case 6: flight_status(); break;
+            case 7: seat_availability(); break;
+            case 8: register_passenger(); break;
+            case 9: view_passengers(); break;
+            case 10: update_passenger(); break;
+            case 11: search_passenger(); break;
+            case 12: book_ticket(); break;
+            case 13: cancel_ticket(); break;
+            case 14: passenger_checkin(); break;
+            case 15: boarding_pass(); break;
+            case 16: revenue_report(); break;
+            case 17: payment_processing(); break;
+            case 18: save_data(); break;
             case 0:
                 save_data();
-                printf("Exiting...\n");
+                printf("Exiting... Data saved.\n");
                 break;
-
             default:
-                printf("Invalid Choice.\n");
+                printf("Invalid choice.\n");
         }
-
-    } while(choice != 0);
-
-    return 0;
-}
+    } while (choice != 0);
+return 0;
