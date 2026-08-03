@@ -1,336 +1,249 @@
-#include <stdio.h>
-int main()
-{
-    int id;
-    char name[50];
-    char version[20];
-
-    printf("Enter Package ID: ");
-    scanf("%d",&id);
-
-    printf("Enter Package Name: ");
-    scanf("%49s",name);
-
-    printf("Enter Package Version: ");
-    scanf("%19s",version);
-
-    if(id > 0)
-        printf("TEST PASSED\n");
-    else
-        printf("TEST FAILED\n");
-
-    printf("Package Details:\n");
-    printf("ID: %d\n",id);
-    printf("Name: %s\n",name);
-    printf("Version: %s\n",version);
-
-    return 0;
-}
-
-testcirculardependency.c
-#include <stdio.h>
-
-#define MAX 20
-
-int graph[MAX][MAX];
-int visited[MAX];
-int recStack[MAX];
-int vertices;
-
-int dfs(int node)
-{
-    visited[node]=1;
-    recStack[node]=1;
-
-    for(int i=0;i<vertices;i++)
-    {
-        if(graph[node][i])
-        {
-            if(!visited[i])
-            {
-                if(dfs(i))
-                    return 1;
-            }
-            else if(recStack[i])
-            {
-                return 1;
-            }
-        }
-    }
-
-    recStack[node]=0;
-    return 0;
-}
-
-int detectCycle()
-{
-    for(int i=0;i<vertices;i++)
-    {
-        if(!visited[i])
-        {
-            if(dfs(i))
-                return 1;
-        }
-    }
-    return 0;
-}
-
-int main()
-{
-    int edges, src, dest;
-
-    printf("Enter number of packages: ");
-    scanf("%d",&vertices);
-
-    printf("Enter number of dependencies: ");
-    scanf("%d",&edges);
-
-    for(int i=0;i<edges;i++)
-    {
-        scanf("%d%d",&src,&dest);
-        graph[src][dest]=1;
-    }
-
-    if(detectCycle())
-        printf("TEST PASSED: Circular Dependency Found\n");
-    else
-        printf("TEST PASSED: No Circular Dependency\n");
-
-    return 0;
-}
-
-3. Testconflict.c
+#include <assert.h>
 #include <stdio.h>
 #include <string.h>
 
-struct Package
+/* Structures */
+
+typedef struct
 {
-    char name[30];
-    char version[20];
-};
+    int flightId;
+    char name[50];
+    char source[30];
+    char destination[30];
+    float fare;
+    int totalSeats;
+    int bookedSeats;
+    char status[20];
+} Flight;
+
+typedef struct
+{
+    int passengerId;
+    char name[50];
+    int age;
+    char contact[15];
+    int flightId;
+    int checkedIn;
+    int ticketBooked;
+    char ticketClass[20];
+} Passenger;
+
+/* Global Test Data */
+
+Flight flight;
+Passenger passenger;
+
+float totalRevenue = 0.0;
+
+/* Test 1 */
+
+void test_admin_login()
+{
+    char username[] = "admin";
+    char password[] = "admin123";
+
+    assert(strcmp(username, "admin") == 0);
+    assert(strcmp(password, "admin123") == 0);
+
+    printf("test_admin_login PASSED\n");
+}
+
+/* Test 2 */
+
+void test_add_flight()
+{
+    flight.flightId = 1;
+
+    strcpy(flight.name, "Indigo");
+    strcpy(flight.source, "Chennai");
+    strcpy(flight.destination, "Delhi");
+
+    flight.fare = 5000;
+    flight.totalSeats = 100;
+    flight.bookedSeats = 0;
+
+    strcpy(flight.status, "On Time");
+
+    assert(flight.flightId == 1);
+    assert(strcmp(flight.name, "Indigo") == 0);
+    assert(flight.fare == 5000);
+
+    printf("test_add_flight PASSED\n");
+}
+
+/* Test 3 */
+
+void test_update_flight()
+{
+    flight.fare = 6500;
+
+    assert(flight.fare == 6500);
+
+    printf("test_update_flight PASSED\n");
+}
+
+/* Test 4 */
+
+void test_flight_status()
+{
+    strcpy(flight.status, "Delayed");
+
+    assert(strcmp(flight.status, "Delayed") == 0);
+
+    printf("test_flight_status PASSED\n");
+}
+
+/* Test 5 */
+
+void test_seat_availability()
+{
+    flight.totalSeats = 100;
+    flight.bookedSeats = 30;
+
+    int available =
+        flight.totalSeats -
+        flight.bookedSeats;
+
+    assert(available == 70);
+
+    printf("test_seat_availability PASSED\n");
+}
+
+/* Test 6 */
+
+void test_register_passenger()
+{
+    passenger.passengerId = 1;
+
+    strcpy(passenger.name, "Lavanyaa");
+
+    passenger.age = 22;
+
+    strcpy(passenger.contact,
+           "9876543210");
+
+    assert(passenger.passengerId == 1);
+    assert(strcmp(passenger.name,
+           "Lavanyaa") == 0);
+
+    printf("test_register_passenger PASSED\n");
+}
+
+/* Test 7 */
+
+void test_update_passenger()
+{
+    passenger.age = 23;
+
+    assert(passenger.age == 23);
+
+    printf("test_update_passenger PASSED\n");
+}
+
+/* Test 8 */
+
+void test_book_ticket()
+{
+    passenger.flightId = 1;
+
+    passenger.ticketBooked = 1;
+
+    strcpy(passenger.ticketClass,
+           "Economy");
+
+    flight.bookedSeats++;
+
+    totalRevenue += flight.fare;
+
+    assert(passenger.ticketBooked == 1);
+    assert(passenger.flightId == 1);
+
+    printf("test_book_ticket PASSED\n");
+}
+
+/* Test 9 */
+
+void test_payment_processing()
+{
+    float payment = 5000;
+
+    totalRevenue += payment;
+
+    assert(totalRevenue > 0);
+
+    printf("test_payment_processing PASSED\n");
+}
+
+/* Test 10 */
+
+void test_checkin()
+{
+    passenger.checkedIn = 1;
+
+    assert(passenger.checkedIn == 1);
+
+    printf("test_checkin PASSED\n");
+}
+
+/* Test 11 */
+
+void test_boarding_pass()
+{
+    assert(passenger.ticketBooked == 1);
+    assert(passenger.checkedIn == 1);
+
+    printf("test_boarding_pass PASSED\n");
+}
+
+/* Test 12 */
+
+void test_cancel_ticket()
+{
+    passenger.ticketBooked = 0;
+    passenger.flightId = 0;
+    passenger.checkedIn = 0;
+
+    assert(passenger.ticketBooked == 0);
+    assert(passenger.flightId == 0);
+
+    printf("test_cancel_ticket PASSED\n");
+}
+
+/* Test 13 */
+
+void test_revenue_report()
+{
+    assert(totalRevenue > 0);
+
+    printf("test_revenue_report PASSED\n");
+}
+
+/* Main */
 
 int main()
 {
-    struct Package p1, p2;
+    printf("\n===== UNIT TEST REPORT =====\n\n");
 
-    printf("Enter Package 1 Name: ");
-    scanf("%29s", p1.name);
+    test_admin_login();
+    test_add_flight();
+    test_update_flight();
+    test_flight_status();
+    test_seat_availability();
 
-    printf("Enter Package 1 Version: ");
-    scanf("%19s", p1.version);
+    test_register_passenger();
+    test_update_passenger();
 
-    printf("Enter Package 2 Name: ");
-    scanf("%29s", p2.name);
+    test_book_ticket();
+    test_payment_processing();
 
-    printf("Enter Package 2 Version: ");
-    scanf("%19s", p2.version);
+    test_checkin();
+    test_boarding_pass();
 
-    if(strcmp(p1.name, p2.name) == 0 &&
-       strcmp(p1.version, p2.version) != 0)
-    {
-        printf("TEST PASSED : Conflict Detected\n");
-    }
-    else
-    {
-        printf("TEST PASSED : No Conflict\n");
-    }
+    test_cancel_ticket();
 
-    return 0;
-}
+    test_revenue_report();
 
-4. testgraph.c
-#include <stdio.h>
-
-#define MAX 20
-
-int graph[MAX][MAX];
-
-int main()
-{
-    int vertices, edges;
-    int src, dest;
-
-    printf("Enter number of packages: ");
-    scanf("%d",&vertices);
-
-    printf("Enter number of dependencies: ");
-    scanf("%d",&edges);
-
-    for(int i=0;i<edges;i++)
-    {
-        scanf("%d%d",&src,&dest);
-        graph[src][dest]=1;
-    }
-
-    printf("\nDependency Graph:\n");
-
-    for(int i=0;i<vertices;i++)
-    {
-        for(int j=0;j<vertices;j++)
-        {
-            printf("%d ",graph[i][j]);
-        }
-        printf("\n");
-    }
-
-    return 0;
-}
-
-5. testinstallation.c
-#include <stdio.h>
-
-#define MAX 20
-
-int graph[MAX][MAX];
-int visited[MAX];
-int stack[MAX];
-int top=-1;
-int vertices;
-
-void topo(int node)
-{
-    visited[node]=1;
-
-    for(int i=0;i<vertices;i++)
-    {
-        if(graph[node][i] && !visited[i])
-            topo(i);
-    }
-
-    stack[++top]=node;
-}
-
-int main()
-{
-    int edges,src,dest;
-
-    printf("Enter number of packages: ");
-    scanf("%d",&vertices);
-
-    printf("Enter number of dependencies: ");
-    scanf("%d",&edges);
-
-    for(int i=0;i<edges;i++)
-    {
-        scanf("%d%d",&src,&dest);
-        graph[src][dest]=1;
-    }
-
-    for(int i=0;i<vertices;i++)
-    {
-        if(!visited[i])
-            topo(i);
-    }
-
-    printf("Installation Order:\n");
-
-    while(top!=-1)
-    {
-        printf("%d ",stack[top--]);
-    }
-
-    printf("\n");
-
-    return 0;
-}
-
-6. testreporting.c
-#include <stdio.h>
-
-int main()
-{
-    int packages,dependencies,conflicts,cycles;
-
-    printf("Packages: ");
-    scanf("%d",&packages);
-
-    printf("Dependencies: ");
-    scanf("%d",&dependencies);
-
-    printf("Conflicts: ");
-    scanf("%d",&conflicts);
-
-    printf("Cycles: ");
-    scanf("%d",&cycles);
-
-    printf("\n===== REPORT =====\n");
-    printf("Packages: %d\n",packages);
-    printf("Dependencies: %d\n",dependencies);
-    printf("Conflicts: %d\n",conflicts);
-    printf("Cycles: %d\n",cycles);
-
-    return 0;
-}
-
-7. testresolution.c
-#include <stdio.h>
-
-#define MAX 20
-
-int graph[MAX][MAX];
-
-int main()
-{
-    int vertices, edges;
-    int src,dest,package;
-
-    printf("Enter number of packages: ");
-    scanf("%d",&vertices);
-
-    printf("Enter number of dependencies: ");
-    scanf("%d",&edges);
-
-    for(int i=0;i<edges;i++)
-    {
-        scanf("%d%d",&src,&dest);
-        graph[src][dest]=1;
-    }
-
-    printf("Enter package: ");
-    scanf("%d",&package);
-
-    printf("Dependencies:\n");
-
-    for(int i=0;i<vertices;i++)
-    {
-        if(graph[package][i])
-            printf("Package %d\n",i);
-    }
-
-    return 0;
-}
-
-8. testuser.c
-#include <stdio.h>
-
-int main()
-{
-    int choice;
-
-    printf("1.Package Management\n");
-    printf("2.Dependency Graph\n");
-    printf("3.Circular Dependency\n");
-    printf("4.Dependency Resolution\n");
-    printf("5.Installation Order\n");
-    printf("6.Conflict Detection\n");
-    printf("7.Reporting\n");
-    printf("8.Exit\n");
-
-    printf("Enter Choice: ");
-    scanf("%d",&choice);
-
-    switch(choice)
-    {
-        case 1: printf("Package Management Selected\n"); break;
-        case 2: printf("Dependency Graph Selected\n"); break;
-        case 3: printf("Circular Dependency Selected\n"); break;
-        case 4: printf("Dependency Resolution Selected\n"); break;
-        case 5: printf("Installation Order Selected\n"); break;
-        case 6: printf("Conflict Detection Selected\n"); break;
-        case 7: printf("Reporting Selected\n"); break;
-        case 8: printf("Exit\n"); break;
-        default: printf("Invalid Choice\n");
-    }
+    printf("\nALL TEST CASES PASSED\n");
 
     return 0;
 }
